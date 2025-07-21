@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gabo Virtual</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      text-align: center;
+      background: url("descarga.jpeg") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin-top: 20px;
+      color: #ff4081;
+      text-shadow: 1px 1px white;
+    }
+    #mascota {
+      width: 250px;
+      margin: 20px auto;
+    }
+    #mascota img {
+      width: 100%;
+      border-radius: 20px;
+    }
+    .botones {
+      margin: 20px;
+    }
+    button {
+      background-color: #ff80ab;
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff4081;
+    }
+    .barra {
+      width: 80%;
+      background: #ddd;
+      height: 30px;
+      margin: 20px auto;
+      border-radius: 15px;
+      overflow: hidden;
+      border: 2px solid #ff80ab;
+    }
+    .relleno {
+      height: 100%;
+      background: linear-gradient(to right, #ff80ab, #ff4081);
+      width: 0%;
+      transition: width 0.5s;
+    }
+    #estado {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <audio autoplay loop>
+    <source src="canción.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio.
+  </audio>
+
+  <h1>Gabo Virtual</h1>
+
+  <div id="mascota">
+    <img id="imagenMascota" src="Gabotriste.png" alt="Gabo mascota"/>
+  </div>
+
+  <div class="barra">
+    <div class="relleno" id="barraAmor"></div>
+  </div>
+  <div id="estado">Estado: Esperando amor...</div>
+
+  <div class="botones">
+    <button onclick="besar()">💋 Besar</button>
+    <button onclick="alimentar()">🍓 Alimentar</button>
+    <button onclick="jugar()">🎮 Jugar</button>
+  </div>
+
+  <script>
+    let amor = localStorage.getItem("amor") || 0;
+
+    function actualizarBarra() {
+      document.getElementById("barraAmor").style.width = amor + "%";
+      let estado = "Estado: ";
+      if (amor < 30) estado += "Estoy triste :(";
+      else if (amor < 70) estado += "Estoy bien :)";
+      else estado += "¡Estoy feliz :D";
+      document.getElementById("estado").innerText = estado;
+    }
+
+    function aumentarAmor(cantidad) {
+      amor = Math.min(100, parseInt(amor) + cantidad);
+      localStorage.setItem("amor", amor);
+      actualizarBarra();
+    }
+
+    function cambiarImagen(nombreArchivo) {
+      document.getElementById("imagenMascota").src = nombreArchivo;
+
+      // Volver a imagen triste luego de 2 segundos
+      setTimeout(() => {
+        document.getElementById("imagenMascota").src = "Gabotriste.png";
+      }, 2000);
+    }
+
+    function besar() {
+      aumentarAmor(10);
+      cambiarImagen("Gabont.png");
+    }
+
+    function alimentar() {
+      aumentarAmor(15);
+      cambiarImagen("Gabocomiendo.png");
+    }
+
+    function jugar() {
+      aumentarAmor(20);
+      cambiarImagen("Gabomalo.png");
+      // Aquí puedes llamar a tu juego personalizado si quieres
+    }
+
+    // Reiniciar la barra cada día
+    const hoy = new Date().toDateString();
+    const ultimoDia = localStorage.getItem("ultimoDia");
+    if (hoy !== ultimoDia) {
+      amor = 0;
+      localStorage.setItem("amor", 0);
+      localStorage.setItem("ultimoDia", hoy);
+    }
+
+    actualizarBarra();
+  </script>
+
+</body>
+</html>
